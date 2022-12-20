@@ -1,7 +1,6 @@
 #include <SPI.h>
 #include "LedMatrix.h"
 #include "cp437font.h"
-
 /**
  * Heavily influenced by the code and the blog posts from https://github.com/nickgammon/MAX7219_Dot_Matrix
  */
@@ -158,7 +157,13 @@ void LedMatrix::setColumn(int column, byte value) {
     if (column < 0 || column >= myNumberOfDevices * 8) {
         return;
     }
-    cols[column] = value;
+
+    int num_pixels = this->myNumberOfDevices * 8;
+    for(int n = 0; n < 8; n++){
+        if(value & (1 << n))
+            setPixel((num_pixels-1) - column , n);
+    }
+
 }
 
 void LedMatrix::setPixel(byte x, byte y) {
@@ -172,4 +177,17 @@ void LedMatrix::setPixel(byte x, byte y) {
     int new_y = matrix_x;
 
     bitWrite(cols[new_x], new_y, true);
+}
+
+void LedMatrix::clearPixel(byte x, byte y) {
+
+    // Weird Matrix operations to rotate everything around the way I need to
+    // -- William Redenbaugh
+    int matrix_x = 7-(x % 8);
+    int matrix_y = y % 8;
+    int which_matrix = x / 8;
+    int new_x = (7 - matrix_y) + (which_matrix * 8);
+    int new_y = matrix_x;
+
+    bitWrite(cols[new_x], new_y, false);
 }
