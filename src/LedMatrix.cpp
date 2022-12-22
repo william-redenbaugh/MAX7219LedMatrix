@@ -1,5 +1,5 @@
 #include <SPI.h>
-#include "LedMatrix.h"
+#include "MAX7219LedMatrix/src/LedMatrix.h"
 #include "cp437font.h"
 /**
  * Heavily influenced by the code and the blog posts from https://github.com/nickgammon/MAX7219_Dot_Matrix
